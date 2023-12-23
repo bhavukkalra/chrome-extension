@@ -1,7 +1,8 @@
-chrome.tabs.onUpdated.addEventListener((tabId, tab) => {
+chrome.tabs.onUpdated.addListener()((tabId, tab) => {
     if (tab.url && tab.url.includes("youtube.com/watch")) {
         const queryParameters = tab.url.split("?")[1];
         const urlParameters = new URLSearchParams(queryParameters);
+        console.log(urlParameters);
 
         // Returns a promise?
         chrome.tabs.sendMessage(tabId, {
