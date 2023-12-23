@@ -1,0 +1,15 @@
+popup.html => Works as a UI for the extension
+content_scripts => used for manipulating the DOM of the web page
+
+
+(() => {})(); => anonymous self-invoking function (function without name)
+
+
+chrome.tabs.sendMessage => There is a unique messaging system that happens between the extension and the page
+which we utilize
+
+
+https://www.youtube.com/watch?v=0n809nd4Zu4
+urlParameters.get("v") => 0n809nd4Zu4
+
+
