@@ -173,4 +173,7 @@ fabric.properties
 !.idea/runConfigurations
 chrome-extension.iml
 
+# Developer dependencies (For code completion)
+chrom_api_stub.js
+
 # End of https://www.toptal.com/developers/gitignore/api/intellij,intellij+all
