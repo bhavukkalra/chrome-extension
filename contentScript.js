@@ -1,5 +1,6 @@
 (() => {
-    let youtubeLeftControls, youtubePlayer;
+    let youtubeLeftControls = ""
+    let youtubePlayer = "";
     let currentVideo = ""
 
     chrome.runtime.onMessage.addListener((obj, sender, response) => {
@@ -26,7 +27,8 @@
 
             youtubeLeftControls = document.getElementsByClassName("ytp-left-controls")[0];
             youtubePlayer = document.getElementsByClassName("video-stream")[0];
-
+            console.log(`The left controls are ${youtubeLeftControls}`);
+            console.log(`The youtube player is ${youtubePlayer}`);
             // Append the button to the left row
             youtubeLeftControls.appendChild(bookmarkBtn);
         }
