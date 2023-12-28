@@ -8,9 +8,15 @@
 
         if(type === "NEW"){
             currentVideo = videoId;
-            // newVideoLoaded();
+            callWithADelay();
         }
     });
+
+    // HTML doesn't get loaded completely for script ot function properly
+    // In case of slower connections
+    function callWithADelay() {
+        setTimeout(newVideoLoaded, 3000);
+    }
     
     const newVideoLoaded = () => {
         const bookmarkBtnExists = document.getElementsByClassName("bookmark-name")[0];
@@ -34,6 +40,6 @@
         }
     }
     // Fix this at a later point(due to onUpdate event listener) TODO
-    newVideoLoaded();
+    callWithADelay();
     
 })();
