@@ -16,4 +16,6 @@ urlParameters.get("v") => 0n809nd4Zu4
 content_scripts => Whenever it detects the youtube.com url
 It injects the contentScript into the webpage
 
+background.js => Tells us when a new video gets loaded
+
 
