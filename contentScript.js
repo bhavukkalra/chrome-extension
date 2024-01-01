@@ -13,16 +13,24 @@
         }
     });
 
+    const fetchBookmarks = () => {
+        return new Promise((resolve, reject) => {
+            chrome.storage.sync.get(currentVideo, (obj) => {
+                resolve(obj[currentVideo] ? JSON.parse(obj[currentVideo]) : []);
+            });
+        });
+    }
+
     // HTML doesn't get loaded completely for script ot function properly
     // In case of slower connections
     function callWithADelay() {
         setTimeout(newVideoLoaded, 3000);
     }
     
-    const newVideoLoaded = () => {
+    const newVideoLoaded = async () => {
         // Condition always failing and more elements are getting appended TODO
         const bookmarkBtnExists = document.getElementsByClassName("bookmark-btn")[0];
-
+        currentVideoBookmarks = await fetchBookmarks();
         console.log(bookmarkBtnExists);
 
         if(!bookmarkBtnExists){
@@ -48,7 +56,7 @@
     }
     // Fix this at a later point(due to onUpdate event listener) TODO
     callWithADelay(); // (Two time showing)
-    const addNewBookmarkEventHandler = () => {
+    const addNewBookmarkEventHandler = async () => {
         const timeStampElement = document.getElementsByClassName("ytp-time-current")[0];
         const timeStampFromYoutubeUIString = timeStampElement.innerHTML;
 
@@ -65,6 +73,8 @@
         }
         console.log(`New bookmark - ${JSON.stringify(newBookmark)}`);
         console.log(newBookmark);
+
+        currentVideoBookmarks = await fetchBookmarks();
 
         chrome.storage.sync.set({
             [currentVideo]: JSON.stringify([...currentVideoBookmarks, newBookmark].sort((a, b) => a.time - b.time))
