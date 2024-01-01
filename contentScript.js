@@ -28,9 +28,16 @@
     }
     
     const newVideoLoaded = async () => {
+        console.log("inside newVideoLoaded")
         // Condition always failing and more elements are getting appended TODO
         const bookmarkBtnExists = document.getElementsByClassName("bookmark-btn")[0];
+        console.log("Showing the bookmarks if any")
+
         currentVideoBookmarks = await fetchBookmarks();
+        console.log("Bookmarks fetched")
+        console.log(currentVideoBookmarks);
+
+
         console.log(bookmarkBtnExists);
 
         if(!bookmarkBtnExists){
@@ -75,6 +82,8 @@
         console.log(newBookmark);
 
         currentVideoBookmarks = await fetchBookmarks();
+        console.log("currentVideoBookmarks");
+        console.log(currentVideoBookmarks);
 
         chrome.storage.sync.set({
             [currentVideo]: JSON.stringify([...currentVideoBookmarks, newBookmark].sort((a, b) => a.time - b.time))
