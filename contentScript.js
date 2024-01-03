@@ -13,6 +13,15 @@
         } else if(type === "PLAY"){
             // Won't work with the player?? If the page is refreshed?
             youtubePlayer.currentTime = value;
+        }else if (type === "DELETE"){
+            currentVideoBookmarks = currentVideoBookmarks.filter((b) => b.time != value);
+            chrome.storage.sync.set({[currentVideo]: JSON.stringify(currentVideoBookmarks)});
+
+            // A request came in for deleting a bookmark, respond with the updated bookmarks for the
+            // current video, after deletion
+            response(currentVideoBookmarks);
+
+
         }
     });
 

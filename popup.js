@@ -7,10 +7,10 @@ const addNewBookmark = (bookmarksElement, bookmark) => {
     const bookmarkTitleElement = document.createElement("div");
     const newBookmarkElement = document.createElement("div");
 
-    const controlElement = document.createElement("div");
-    controlElement.className = "bookmark-controls";
-    setBookmarkAttributes("play", onPlay, controlElement);
-
+    const controlsElement = document.createElement("div");
+    controlsElement.className = "bookmark-controls";
+    setBookmarkAttributes("play", onPlay, controlsElement);
+    setBookmarkAttributes("delete", onDelete, controlsElement);
 
     bookmarkTitleElement.textContent = bookmark.desc;
     bookmarkTitleElement.className = "bookmark-title";
@@ -22,7 +22,7 @@ const addNewBookmark = (bookmarksElement, bookmark) => {
     newBookmarkElement.setAttribute("timestamp", bookmark.time);
 
     newBookmarkElement.appendChild(bookmarkTitleElement);
-    newBookmarkElement.appendChild(controlElement);
+    newBookmarkElement.appendChild(controlsElement);
     bookmarksElement.appendChild(newBookmarkElement);
 
 };
@@ -55,13 +55,26 @@ const onPlay = async e => {
     const bookmarkTime = e.target.parentNode.parentNode.getAttribute("timestamp");
     const activeTab = await getActiveTabURL();
 
+    // Send the messeage to the content script to adjust the player current time
     chrome.tabs.sendMessage(activeTab.id, {
         type: "PLAY",
         value: bookmarkTime
     })
 };
 
-const onDelete = e => {};
+const onDelete = async e => {
+    const activeTab = await getActiveTabURL();
+    const bookmarkTime = e.target.parentNode.parentNode.getAttribute("timestamp");
+    const bookmarkElementToBeDelete = document.getElementById("bookmark-" + bookmarkTime);
+
+    bookmarkElementToBeDelete.parentNode.removeChild(bookmarkElementToBeDelete);
+
+    chrome.tabs.sendMessage(activeTab.id, {
+        type: "DELETE",
+        value: bookmarkTime
+    }, viewBookmarks);
+
+};
 
 /*
 Generic Control Element
@@ -73,12 +86,12 @@ src = PLAY, DELETE
  */
 
 const setBookmarkAttributes =  (src, eventListener, controlParentElement) => {
-    const controlElement = document.createElement("img");
+    const controlsElement = document.createElement("img");
 
-    controlElement.src = "assets/" + src + ".png";
-    controlElement.title = src;
-    controlElement.addEventListener("click", eventListener);
-    controlParentElement.appendChild(controlElement);
+    controlsElement.src = "assets/" + src + ".png";
+    controlsElement.title = src;
+    controlsElement.addEventListener("click", eventListener);
+    controlParentElement.appendChild(controlsElement);
 
 };
 
