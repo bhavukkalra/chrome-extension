@@ -7,6 +7,11 @@ const addNewBookmark = (bookmarksElement, bookmark) => {
     const bookmarkTitleElement = document.createElement("div");
     const newBookmarkElement = document.createElement("div");
 
+    const controlElement = document.createElement("div");
+    controlElement.className = "bookmark-controls";
+    setBookmarkAttributes("play", onPlay, controlElement);
+
+
     bookmarkTitleElement.textContent = bookmark.desc;
     bookmarkTitleElement.className = "bookmark-title";
 
@@ -17,6 +22,7 @@ const addNewBookmark = (bookmarksElement, bookmark) => {
     newBookmarkElement.setAttribute("timestamp", bookmark.time);
 
     newBookmarkElement.appendChild(bookmarkTitleElement);
+    newBookmarkElement.appendChild(controlElement);
     bookmarksElement.appendChild(newBookmarkElement);
 
 };
@@ -45,11 +51,36 @@ const viewBookmarks = (currentBookmarks = []) => {
 
 }
 
-const onPlay = e => {};
+const onPlay = async e => {
+    const bookmarkTime = e.target.parentNode.parentNode.getAttribute("timestamp");
+    const activeTab = await getActiveTabURL();
+
+    chrome.tabs.sendMessage(activeTab.id, {
+        type: "PLAY",
+        value: bookmarkTime
+    })
+};
 
 const onDelete = e => {};
 
-const setBookmarkAttributes =  () => {};
+/*
+Generic Control Element
+
+src = PLAY, DELETE
+
+
+
+ */
+
+const setBookmarkAttributes =  (src, eventListener, controlParentElement) => {
+    const controlElement = document.createElement("img");
+
+    controlElement.src = "assets/" + src + ".png";
+    controlElement.title = src;
+    controlElement.addEventListener("click", eventListener);
+    controlParentElement.appendChild(controlElement);
+
+};
 
 // if (document.readyState !== 'loading') {
 //     init();

@@ -5,11 +5,14 @@
     let currentVideoBookmarks = [];
 
     chrome.runtime.onMessage.addListener((obj, sender, response) => {
-        const {type, videoId} = obj;
+        const {type, value ,videoId} = obj;
 
         if(type === "NEW"){
             currentVideo = videoId;
             callWithADelay();
+        } else if(type === "PLAY"){
+            // Won't work with the player?? If the page is refreshed?
+            youtubePlayer.currentTime = value;
         }
     });
 
