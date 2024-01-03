@@ -22,15 +22,22 @@ const addNewBookmark = (bookmarksElement, bookmark) => {
 };
 
 const viewBookmarks = (currentBookmarks = []) => {
+    console.log("inside viewBookmarks")
     const bookmarksElement = document.getElementById("bookmarks");
     // Append to this element all the bookmarks (if any)
-    bookmarksElement.innerHTML = ""
+    bookmarksElement.innerHTML = "";
+    console.log("currentBookmarks");
+    console.log(currentBookmarks);
+
+
 
     if (currentBookmarks.length > 0){
         for(let i = 0; i < currentBookmarks.length; i++){
-            const bookmark = currentBookmarks[i];
+            console.log("bookmark_current")
+            let bookmark_current = currentBookmarks[i];
+            console.log(bookmark_current)
             // Appending the current element (bookmark)
-            addNewBookmark(bookmarksElement, bookmark);
+            addNewBookmark(bookmarksElement, bookmark_current);
         }
     }else{
         bookmarksElement.innerHTML = '<i class="row"> No bookmarks to show </i>'
@@ -44,47 +51,45 @@ const onDelete = e => {};
 
 const setBookmarkAttributes =  () => {};
 
-if (document.readyState !== 'loading') {
-    init();
-    console.log("Bhai chal ja")
-}
-else document.addEventListener('DOMContentLoaded', init);
+// if (document.readyState !== 'loading') {
+//     init();
+//     console.log("Bhai chal ja")
+// }
+// else document.addEventListener('DOMContentLoaded', init);
+//
+// function init() {
+//     console.log("Do it !");
+//
+// }
 
-function init() {
-    console.log("Do it !");
+document.addEventListener("DOMContentLoaded", async () => {
+    console.log("Inside the DOMContentLoaded");
+    const activeTab = await getActiveTabURL();
 
-}
+    console.log("getActiveTabURL")
+    console.log(getActiveTabURL);
 
-// document.addEventListener("DOMContentLoaded", async () => {
-//     console.log("Inside the DOMContentLoaded");
-//     console.log("Inside the DOMContentLoaded");
-//     console.log("Inside the DOMContentLoaded");
-//     console.log("Inside the DOMContentLoaded");
-//     const activeTab = await getActiveTabURL();
-//
-//     console.log("getActiveTabURL")
-//     console.log(getActiveTabURL);
-//
-//     const queryParameters = activeTab.url.split("?")[1];
-//     const urlParameters = new URLSearchParams(queryParameters);
-//
-//     const currentVideo = urlParameters.get("v");
-//
-//     // why [currentVideo] as a parameter??
-//     if(activeTab.url.includes("youtube.com/watch") && currentVideo){
-//         chrome.storage.sync.get([currentVideo], (data) => {
-//             console.log("it returns a promise");
-//             console.log(data);
-//             const currentVideoBookmarks = data[currentVideo] ? JSON.parse(data[currentVideo]) : [];
-//
-//             // populate the bookmarks
-//             viewBookmarks(currentVideoBookmarks);
-//         })
-//     }else{
-//         // Not a youtube video page
-//         const container = document.getElementsByClassName("container")[0];
-//         container.innerHTML = '<div class="title"> This is not a youtube page</div>>'
-//
-//     }
-//
-// });
+    const queryParameters = activeTab.url.split("?")[1];
+    const urlParameters = new URLSearchParams(queryParameters);
+
+    const currentVideo = urlParameters.get("v");
+
+    // why [currentVideo] as a parameter??
+    if(activeTab.url.includes("youtube.com/watch") && currentVideo){
+        console.log(`Current video is ${currentVideo}`)
+        chrome.storage.sync.get([currentVideo], (data) => {
+            console.log("it returns a promise");
+            console.log(data);
+            const currentVideoBookmarks = data[currentVideo] ? JSON.parse(data[currentVideo]) : [];
+
+            // populate the bookmarks
+            viewBookmarks(currentVideoBookmarks);
+        })
+    }else{
+        // Not a youtube video page
+        const container = document.getElementsByClassName("container")[0];
+        container.innerHTML = '<div class="title"> This is not a youtube page</div>>'
+
+    }
+
+});

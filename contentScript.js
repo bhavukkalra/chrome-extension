@@ -14,6 +14,19 @@
     });
 
     const fetchBookmarks = () => {
+        console.log(`Fetching all the bookmarks for the currentVideo ${currentVideo}`)
+
+        console.log(currentVideo);
+
+        if(currentVideo === ""){
+            const locationObject = window.location;
+            const currentVideoUrl = locationObject.href;
+            const queryParams = currentVideoUrl.split("?")[1];
+            const URLObj = new URLSearchParams(queryParams);
+            currentVideo = URLObj.get("v")
+
+
+        }
         return new Promise((resolve, reject) => {
             chrome.storage.sync.get(currentVideo, (obj) => {
                 resolve(obj[currentVideo] ? JSON.parse(obj[currentVideo]) : []);
@@ -64,6 +77,16 @@
     // Fix this at a later point(due to onUpdate event listener) TODO
     callWithADelay(); // (Two time showing)
     const addNewBookmarkEventHandler = async () => {
+
+        if(currentVideo === ""){
+            const locationObject1 = window.location;
+            const currentVideoUrl1 = locationObject1.href;
+            const queryParams1 = currentVideoUrl1.split("?")[1];
+            const URLObj1 = new URLSearchParams(queryParams1);
+            currentVideo = URLObj1.get("v");
+        }
+
+
         const timeStampElement = document.getElementsByClassName("ytp-time-current")[0];
         const timeStampFromYoutubeUIString = timeStampElement.innerHTML;
 
@@ -82,7 +105,7 @@
         console.log(newBookmark);
 
         currentVideoBookmarks = await fetchBookmarks();
-        console.log("currentVideoBookmarks");
+        console.log("currentVideoBookmarks --- fetching all the bookmarks");
         console.log(currentVideoBookmarks);
 
         chrome.storage.sync.set({
